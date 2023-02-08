@@ -1,120 +1,91 @@
 import React, { useEffect, useState } from 'react';
 import './Application.scss';
-import { icons } from './Icons';
+import exchangeRate from "../shared/api/exchange-rate";
+import { ExchangeData } from "../typings";
 
 const Application: React.FC = () => {
-  const [counter, setCounter] = useState(0);
-  const [darkTheme, setDarkTheme] = useState(true);
+  const [firstData, setFirstPollData] = useState<ExchangeData>(null);
+  const [secondData, setSecondPollData] = useState<ExchangeData>(null);
+  const [thirdData, setThirdPollData] = useState<ExchangeData>(null);
 
-  /**
-   * On component mount
-   */
   useEffect(() => {
-    const useDarkTheme = parseInt(localStorage.getItem('dark-mode'));
-    if (isNaN(useDarkTheme)) {
-      setDarkTheme(true);
-    } else if (useDarkTheme == 1) {
-      setDarkTheme(true);
-    } else if (useDarkTheme == 0) {
-      setDarkTheme(false);
-    }
+    exchangeRate({ reqDataSetter: setFirstPollData, sourceProvider: "first" }).catch(e => { console.log(e) });
+    exchangeRate({ reqDataSetter: setSecondPollData, sourceProvider: "second" }).catch(e => { console.log(e) });
+    exchangeRate({ reqDataSetter: setThirdPollData, sourceProvider: "third" }).catch(e => { console.log(e) });
   }, []);
 
-  /**
-   * On Dark theme change
-   */
-  useEffect(() => {
-    if (darkTheme) {
-      localStorage.setItem('dark-mode', '1');
-      document.body.classList.add('dark-mode');
-    } else {
-      localStorage.setItem('dark-mode', '0');
-      document.body.classList.remove('dark-mode');
-    }
-  }, [darkTheme]);
 
-  /**
-   * Toggle Theme
-   */
-  function toggleTheme() {
-    setDarkTheme(!darkTheme);
-  }
+  const tableData = [
+    {
+      name: "RUB/CUPCAKE",
+      colFirst: firstData ? firstData.rates.RUB.toFixed(3) : "loading",
+      colSecond: secondData ? secondData.rates.RUB.toFixed(3) : "loading",
+      colThird: thirdData ? thirdData.rates.RUB.toFixed(3) : "loading",
+      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.RUB, secondData.rates.RUB, thirdData.rates.RUB).toFixed(3) : null,
+    },
+    {
+      name: "USD/CUPCAKE",
+      colFirst: firstData ? firstData.rates.USD.toFixed(3) : "loading",
+      colSecond: secondData ? secondData.rates.USD.toFixed(3) : "loading",
+      colThird: thirdData ? thirdData.rates.USD.toFixed(3) : "loading",
+      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.USD, secondData.rates.USD, thirdData.rates.USD).toFixed(3) : null,
+    },
+    {
+      name: "EUR/CUPCAKE",
+      colFirst: firstData ? firstData.rates.EUR.toFixed(3) : "loading",
+      colSecond: secondData ? secondData.rates.EUR.toFixed(3) : "loading",
+      colThird: thirdData ? thirdData.rates.EUR.toFixed(3) : "loading",
+      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.EUR, secondData.rates.EUR, thirdData.rates.EUR).toFixed(3) : null,
+    },
+    {
+      name: "RUB/USD",
+      colFirst: firstData ? (firstData.rates.RUB / firstData.rates.USD).toFixed(3) : "loading",
+      colSecond: secondData ? (secondData.rates.RUB / secondData.rates.USD).toFixed(3) : "loading",
+      colThird: thirdData ? (thirdData.rates.RUB / thirdData.rates.USD).toFixed(3) : "loading",
+      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.RUB / firstData.rates.USD, secondData.rates.RUB / secondData.rates.USD, thirdData.rates.RUB / thirdData.rates.USD).toFixed(3) : null,
+    },
+    {
+      name: "RUB/EUR",
+      colFirst: firstData ? (firstData.rates.RUB / firstData.rates.EUR).toFixed(3) : "loading",
+      colSecond: secondData ? (secondData.rates.RUB / secondData.rates.EUR).toFixed(3) : "loading",
+      colThird: thirdData ? (thirdData.rates.RUB / thirdData.rates.EUR).toFixed(3) : "loading",
+      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.RUB / firstData.rates.EUR, secondData.rates.RUB / secondData.rates.EUR, thirdData.rates.RUB / thirdData.rates.EUR).toFixed(3) : null,
+    },
+    {
+      name: "EUR/USD",
+      colFirst: firstData ? (firstData.rates.EUR / firstData.rates.USD).toFixed(3) : "loading",
+      colSecond: secondData ? (secondData.rates.EUR / secondData.rates.USD).toFixed(3) : "loading",
+      colThird: thirdData ? (thirdData.rates.EUR / thirdData.rates.USD).toFixed(3) : "loading",
+      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.EUR / firstData.rates.USD, secondData.rates.EUR / secondData.rates.USD, thirdData.rates.EUR / thirdData.rates.USD).toFixed(3) : null,
+    },
+  ]
 
   return (
-    <div id='erwt'>
-      <div className='header'>
-        <div className='main-heading'>
-          <h1 className='themed'>React Webpack Typescript</h1>
-        </div>
-        <div className='main-teaser'>
-          <div>
-            Robust boilerplate for Desktop Applications with Electron and
-            ReactJS. Hot Reloading is used in this project for fast development
-            experience.
-            <br />
-            If you think the project is useful enough, just spread the word
-            around!
-          </div>
-        </div>
-        <div className='versions'>
-          <div className='item'>
-            <div>
-              <img className='item-icon' src={icons.erwt} /> ERWT
-            </div>
-          </div>
-          <div className='item'>
-            <div>
-              <img className='item-icon' src={icons.typescript} /> Typescript
-            </div>
-          </div>
-          <div className='item'>
-            <div>
-              <img className='item-icon' src={icons.react} /> React
-            </div>
-          </div>
-          <div className='item'>
-            <div>
-              <img className='item-icon' src={icons.webpack} /> Webpack
-            </div>
-          </div>
-          <div className='item'>
-            <div>
-              <img className='item-icon' src={icons.chrome} /> Chrome
-            </div>
-          </div>
-          <div className='item'>
-            <div>
-              <img className='item-icon' src={icons.license} /> License
-            </div>
-          </div>
-        </div>
+    <div className={"table"}>
+      <div className={"table__row"}>
+        <div className="table__row__name">Pair name/market</div>
+        <div className={"table__row__cell"} >First</div>
+        <div className={"table__row__cell"}>Second</div>
+        <div className={"table__row__cell"}>Third</div>
       </div>
-
-      <div className='footer'>
-        <div className='center'>
-          <button
-            onClick={() => {
-              if (counter > 99) return alert('Going too high!!');
-              setCounter(counter + 1);
-            }}
-          >
-            Increment {counter != 0 ? counter : ''} <span>{counter}</span>
-          </button>
-          &nbsp;&nbsp; &nbsp;&nbsp;
-          <button
-            onClick={() => {
-              if (counter == 0) return alert('Oops.. thats not possible!');
-              setCounter(counter > 0 ? counter - 1 : 0);
-            }}
-          >
-            Decrement <span>{counter}</span>
-          </button>
-          &nbsp;&nbsp; &nbsp;&nbsp;
-          <button onClick={toggleTheme}>
-            {darkTheme ? 'Light Theme' : 'Dark Theme'}
-          </button>
-        </div>
-      </div>
+      {
+        tableData.map(row => (
+          <div className={"table__row"} key={row.name}>
+            <div className={"table__row__name"}>
+              {row.name}
+            </div>
+            <div className={row.colFirst === row.minimum ? "table__row__cell__lowest" : "table__row__cell"}>
+              {row.colFirst}
+            </div>
+            <div className={row.colSecond === row.minimum ? "table__row__cell__lowest" : "table__row__cell"}>
+              {row.colSecond}
+            </div>
+            <div className={row.colThird === row.minimum ? "table__row__cell__lowest" : "table__row__cell"}>
+              {row.colThird}
+            </div>
+          </div>
+        ))
+      }
     </div>
   );
 };
