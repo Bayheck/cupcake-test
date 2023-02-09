@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './Application.scss';
-import { exchangeRate } from "@src/shared/api/exchange-rate";
-import { ExchangeData } from "@src/typings";
-import { exchangeRateLib } from "@src/shared/libs/exchange-rate";
+import { exchangeRate } from "../shared/api/exchange-rate";
+import { ExchangeData } from '../typings';
+import { exchangeRateLib } from "../shared/libs/exchange-rate";
 
 const Application: React.FC = () => {
   const [firstData, setFirstPollData] = useState<ExchangeData>(null);
