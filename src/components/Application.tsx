@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Application.scss';
 import exchangeRate from "../shared/api/exchange-rate";
 import { ExchangeData } from "../typings";
+import { exchangeRateLib } from "../shared/libs/exchange-rate";
 
 const Application: React.FC = () => {
   const [firstData, setFirstPollData] = useState<ExchangeData>(null);
@@ -14,49 +15,48 @@ const Application: React.FC = () => {
     exchangeRate({ reqDataSetter: setThirdPollData, sourceProvider: "third" }).catch(e => { console.log(e) });
   }, []);
 
-
   const tableData = [
     {
       name: "RUB/CUPCAKE",
-      colFirst: firstData ? firstData.rates.RUB.toFixed(3) : "loading",
-      colSecond: secondData ? secondData.rates.RUB.toFixed(3) : "loading",
-      colThird: thirdData ? thirdData.rates.RUB.toFixed(3) : "loading",
-      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.RUB, secondData.rates.RUB, thirdData.rates.RUB).toFixed(3) : null,
+      colFirst: exchangeRateLib.exchangeRateData({ data: firstData, base: "RUB"}),
+      colSecond: exchangeRateLib.exchangeRateData({ data: secondData, base: "RUB"}),
+      colThird: exchangeRateLib.exchangeRateData({ data: thirdData, base: "RUB"}),
+      minimum: exchangeRateLib.exchangeRateMinimum({ firstData, secondData, thirdData, base: "RUB"}),
     },
     {
       name: "USD/CUPCAKE",
-      colFirst: firstData ? firstData.rates.USD.toFixed(3) : "loading",
-      colSecond: secondData ? secondData.rates.USD.toFixed(3) : "loading",
-      colThird: thirdData ? thirdData.rates.USD.toFixed(3) : "loading",
-      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.USD, secondData.rates.USD, thirdData.rates.USD).toFixed(3) : null,
+      colFirst: exchangeRateLib.exchangeRateData({ data: firstData, base: "USD"}),
+      colSecond: exchangeRateLib.exchangeRateData({ data: secondData, base: "USD"}),
+      colThird: exchangeRateLib.exchangeRateData({ data: thirdData, base: "USD"}),
+      minimum: exchangeRateLib.exchangeRateMinimum({ firstData, secondData, thirdData, base: "USD"}),
     },
     {
       name: "EUR/CUPCAKE",
-      colFirst: firstData ? firstData.rates.EUR.toFixed(3) : "loading",
-      colSecond: secondData ? secondData.rates.EUR.toFixed(3) : "loading",
-      colThird: thirdData ? thirdData.rates.EUR.toFixed(3) : "loading",
-      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.EUR, secondData.rates.EUR, thirdData.rates.EUR).toFixed(3) : null,
+      colFirst: exchangeRateLib.exchangeRateData({ data: firstData, base: "EUR"}),
+      colSecond: exchangeRateLib.exchangeRateData({ data: secondData, base: "EUR"}),
+      colThird: exchangeRateLib.exchangeRateData({ data: thirdData, base: "EUR"}),
+      minimum: exchangeRateLib.exchangeRateMinimum({ firstData, secondData, thirdData, base: "EUR"}),
     },
     {
       name: "RUB/USD",
-      colFirst: firstData ? (firstData.rates.RUB / firstData.rates.USD).toFixed(3) : "loading",
-      colSecond: secondData ? (secondData.rates.RUB / secondData.rates.USD).toFixed(3) : "loading",
-      colThird: thirdData ? (thirdData.rates.RUB / thirdData.rates.USD).toFixed(3) : "loading",
-      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.RUB / firstData.rates.USD, secondData.rates.RUB / secondData.rates.USD, thirdData.rates.RUB / thirdData.rates.USD).toFixed(3) : null,
+      colFirst: exchangeRateLib.exchangeRateData({ data: firstData, base: "RUB/USD"}),
+      colSecond: exchangeRateLib.exchangeRateData({ data: secondData, base: "RUB/USD"}),
+      colThird: exchangeRateLib.exchangeRateData({ data: thirdData, base: "RUB/USD"}),
+      minimum: exchangeRateLib.exchangeRateMinimum({ firstData, secondData, thirdData, base: "RUB/USD"}),
     },
     {
       name: "RUB/EUR",
-      colFirst: firstData ? (firstData.rates.RUB / firstData.rates.EUR).toFixed(3) : "loading",
-      colSecond: secondData ? (secondData.rates.RUB / secondData.rates.EUR).toFixed(3) : "loading",
-      colThird: thirdData ? (thirdData.rates.RUB / thirdData.rates.EUR).toFixed(3) : "loading",
-      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.RUB / firstData.rates.EUR, secondData.rates.RUB / secondData.rates.EUR, thirdData.rates.RUB / thirdData.rates.EUR).toFixed(3) : null,
+      colFirst: exchangeRateLib.exchangeRateData({ data: firstData, base: "RUB/EUR"}),
+      colSecond: exchangeRateLib.exchangeRateData({ data: secondData, base: "RUB/EUR"}),
+      colThird: exchangeRateLib.exchangeRateData({ data: thirdData, base: "RUB/EUR"}),
+      minimum: exchangeRateLib.exchangeRateMinimum({ firstData, secondData, thirdData, base: "RUB/EUR"}),
     },
     {
       name: "EUR/USD",
-      colFirst: firstData ? (firstData.rates.EUR / firstData.rates.USD).toFixed(3) : "loading",
-      colSecond: secondData ? (secondData.rates.EUR / secondData.rates.USD).toFixed(3) : "loading",
-      colThird: thirdData ? (thirdData.rates.EUR / thirdData.rates.USD).toFixed(3) : "loading",
-      minimum: (firstData && secondData && thirdData) ? Math.min(firstData.rates.EUR / firstData.rates.USD, secondData.rates.EUR / secondData.rates.USD, thirdData.rates.EUR / thirdData.rates.USD).toFixed(3) : null,
+      colFirst: exchangeRateLib.exchangeRateData({ data: firstData, base: "EUR/USD"}),
+      colSecond: exchangeRateLib.exchangeRateData({ data: secondData, base: "EUR/USD"}),
+      colThird: exchangeRateLib.exchangeRateData({ data: thirdData, base: "EUR/USD"}),
+      minimum: exchangeRateLib.exchangeRateMinimum({ firstData, secondData, thirdData, base: "EUR/USD"}),
     },
   ]
 
