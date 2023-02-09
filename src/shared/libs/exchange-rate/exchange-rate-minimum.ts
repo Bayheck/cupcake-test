@@ -1,4 +1,4 @@
-import { ExchangeData } from '../../../typings';
+import { ExchangeData } from '@src/typing';
 
 interface ExchangeRateMinimum {
   firstData: ExchangeData,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Application.scss';
 import { exchangeRate } from "../shared/api/exchange-rate";
-import { ExchangeData } from '../typings';
+import { ExchangeData } from '../typing';
 import { exchangeRateLib } from "../shared/libs/exchange-rate";
 
 const Application: React.FC = () => {
