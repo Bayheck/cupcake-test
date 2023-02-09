@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Application.scss';
-import exchangeRate from "@src/shared/api/exchange-rate";
+import { exchangeRate } from "@src/shared/api/exchange-rate";
 import { ExchangeData } from "@src/typings";
 import { exchangeRateLib } from "@src/shared/libs/exchange-rate";
 

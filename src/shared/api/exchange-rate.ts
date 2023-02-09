@@ -6,7 +6,7 @@ interface RequestConfig {
   sourceProvider: string,
 }
 
-async function exchangeRate({ reqDataSetter, sourceProvider }: RequestConfig) {
+export async function exchangeRate({ reqDataSetter, sourceProvider }: RequestConfig) {
   const response = await fetch(`http://localhost:3000/api/v1/${sourceProvider}/poll`);
 
   if (response.status == 502) {
@@ -20,5 +20,3 @@ async function exchangeRate({ reqDataSetter, sourceProvider }: RequestConfig) {
     await exchangeRate({ reqDataSetter, sourceProvider });
   }
 }
-
-export default exchangeRate;
